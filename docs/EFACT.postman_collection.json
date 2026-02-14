@@ -1,0 +1,469 @@
+{
+  "info": {
+    "_postman_id": "3a9801a4-1f95-4230-ac74-33ac8e8aaba9",
+    "name": "EFACT",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "17360341",
+    "_collection_link": "https://go.postman.co/collection/17360341-3a9801a4-1f95-4230-ac74-33ac8e8aaba9?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "ms1-Documents",
+      "item": [
+        {
+          "name": "Casos de Error",
+          "item": [
+            {
+              "name": "Formato ID Documento Invalido",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"idDocumento\": \"ABC-12345\",\r\n    \"rucEmisor\": \"20123456789\",\r\n    \"rucReceptor\": \"20987654321\",\r\n    \"montoTotalSinImpuestos\": 100.00,\r\n    \"igvTotal\": 18.00,\r\n    \"montoTotal\": 118.00,\r\n    \"items\": [\r\n      {\r\n        \"descripcion\": \"Test\",\r\n        \"precioUnitario\": 100.00,\r\n        \"cantidad\": 1,\r\n        \"precioTotal\": 100.00,\r\n        \"igvTotal\": 18.00\r\n      }\r\n    ]\r\n  }",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{BASE_URL}}/documents",
+                  "host": [
+                    "{{BASE_URL}}"
+                  ],
+                  "path": [
+                    "documents"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "ERROR: RUC Receptor Invalido (letras)",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"idDocumento\": \"ABCD-012345678\",\r\n    \"rucEmisor\": \"20123456789\",\r\n    \"rucReceptor\": \"20ABC456789\",\r\n    \"montoTotalSinImpuestos\": 100.00,\r\n    \"igvTotal\": 18.00,\r\n    \"montoTotal\": 118.00,\r\n    \"items\": [\r\n      {\r\n        \"descripcion\": \"Test\",\r\n        \"precioUnitario\": 100.00,\r\n        \"cantidad\": 1,\r\n        \"precioTotal\": 100.00,\r\n        \"igvTotal\": 18.00\r\n      }\r\n    ]\r\n  }",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{BASE_URL}}/documents",
+                  "host": [
+                    "{{BASE_URL}}"
+                  ],
+                  "path": [
+                    "documents"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "ERROR: RUC Emisor Invalido (menos de 11 digitos)",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"idDocumento\": \"ABCD-012345678\",\r\n    \"rucEmisor\": \"2012345\",\r\n    \"rucReceptor\": \"20987654321\",\r\n    \"montoTotalSinImpuestos\": 100.00,\r\n    \"igvTotal\": 18.00,\r\n    \"montoTotal\": 118.00,\r\n    \"items\": [\r\n      {\r\n        \"descripcion\": \"Test\",\r\n        \"precioUnitario\": 100.00,\r\n        \"cantidad\": 1,\r\n        \"precioTotal\": 100.00,\r\n        \"igvTotal\": 18.00\r\n      }\r\n    ]\r\n  }",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{BASE_URL}}/documents",
+                  "host": [
+                    "{{BASE_URL}}"
+                  ],
+                  "path": [
+                    "documents"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "ERROR: Monto Negativo",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"idDocumento\": \"ABCD-012345678\",\r\n    \"rucEmisor\": \"20123456789\",\r\n    \"rucReceptor\": \"20987654321\",\r\n    \"montoTotalSinImpuestos\": -100.00,\r\n    \"igvTotal\": 18.00,\r\n    \"montoTotal\": 118.00,\r\n    \"items\": [\r\n      {\r\n        \"descripcion\": \"Test\",\r\n        \"precioUnitario\": 100.00,\r\n        \"cantidad\": 1,\r\n        \"precioTotal\": 100.00,\r\n        \"igvTotal\": 18.00\r\n      }\r\n    ]\r\n  }",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{BASE_URL}}/documents",
+                  "host": [
+                    "{{BASE_URL}}"
+                  ],
+                  "path": [
+                    "documents"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "ERROR: Sin Items",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"idDocumento\": \"ABCD-012345678\",\r\n    \"rucEmisor\": \"20123456789\",\r\n    \"rucReceptor\": \"20987654321\",\r\n    \"montoTotalSinImpuestos\": 100.00,\r\n    \"igvTotal\": 18.00,\r\n    \"montoTotal\": 118.00,\r\n    \"items\": []\r\n  }",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{BASE_URL}}/documents",
+                  "host": [
+                    "{{BASE_URL}}"
+                  ],
+                  "path": [
+                    "documents"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "ERROR: Precio Unitario Negativo",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"idDocumento\": \"ABCD-012345678\",\r\n    \"rucEmisor\": \"20123456789\",\r\n    \"rucReceptor\": \"20987654321\",\r\n    \"montoTotalSinImpuestos\": 100.00,\r\n    \"igvTotal\": 18.00,\r\n    \"montoTotal\": 118.00,\r\n    \"items\": [\r\n      {\r\n        \"descripcion\": \"Test\",\r\n        \"precioUnitario\": -100.00,\r\n        \"cantidad\": 1,\r\n        \"precioTotal\": 100.00,\r\n        \"igvTotal\": 18.00\r\n      }\r\n    ]\r\n  }",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{BASE_URL}}/documents",
+                  "host": [
+                    "{{BASE_URL}}"
+                  ],
+                  "path": [
+                    "documents"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "ERROR: Cantidad Cero",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"idDocumento\": \"ABCD-012345678\",\r\n    \"rucEmisor\": \"20123456789\",\r\n    \"rucReceptor\": \"20987654321\",\r\n    \"montoTotalSinImpuestos\": 100.00,\r\n    \"igvTotal\": 18.00,\r\n    \"montoTotal\": 118.00,\r\n    \"items\": [\r\n      {\r\n        \"descripcion\": \"Test\",\r\n        \"precioUnitario\": 100.00,\r\n        \"cantidad\": 0,\r\n        \"precioTotal\": 100.00,\r\n        \"igvTotal\": 18.00\r\n      }\r\n    ]\r\n  }",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{BASE_URL}}/documents",
+                  "host": [
+                    "{{BASE_URL}}"
+                  ],
+                  "path": [
+                    "documents"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "ERROR: JSON Malformado",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"idDocumento\": \"ABCD-012345678\",\r\n    \"rucEmisor\": \"20123456789\"",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{BASE_URL}}/documents",
+                  "host": [
+                    "{{BASE_URL}}"
+                  ],
+                  "path": [
+                    "documents"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "ERROR: Obtener Documento Inexistente",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": ""
+                },
+                "url": {
+                  "raw": "{{BASE_URL}}/documents/ZZZZ-999999999",
+                  "host": [
+                    "{{BASE_URL}}"
+                  ],
+                  "path": [
+                    "documents",
+                    "ZZZZ-999999999"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "ERROR: Obtener Documento Inexistente Copy",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": ""
+                },
+                "url": {
+                  "raw": "{{BASE_URL}}/documendd",
+                  "host": [
+                    "{{BASE_URL}}"
+                  ],
+                  "path": [
+                    "documendd"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "ERROR: Actualizar Documento Inexistente",
+              "request": {
+                "method": "PUT",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"idDocumento\": \"ZZZZ-999999999\",\r\n    \"rucEmisor\": \"20123456789\",\r\n    \"rucReceptor\": \"20987654321\",\r\n    \"montoTotalSinImpuestos\": 100.00,\r\n    \"igvTotal\": 18.00,\r\n    \"montoTotal\": 118.00,\r\n    \"items\": [\r\n      {\r\n        \"descripcion\": \"Test\",\r\n        \"precioUnitario\": 100.00,\r\n        \"cantidad\": 1,\r\n        \"precioTotal\": 100.00,\r\n        \"igvTotal\": 18.00\r\n      }\r\n    ]\r\n  }",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{BASE_URL}}/documents/ZZZZ-999999999",
+                  "host": [
+                    "{{BASE_URL}}"
+                  ],
+                  "path": [
+                    "documents",
+                    "ZZZZ-999999999"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "ERROR: Eliminar Documento Inexistente",
+              "request": {
+                "method": "DELETE",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": ""
+                },
+                "url": {
+                  "raw": "{{BASE_URL}}/documents/ZZZZ-999999999",
+                  "host": [
+                    "{{BASE_URL}}"
+                  ],
+                  "path": [
+                    "documents",
+                    "ZZZZ-999999999"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Crear documento",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"idDocumento\": \"ABCD-012345670\",\r\n    \"rucEmisor\": \"20123456789\",\r\n    \"rucReceptor\": \"20987654321\",\r\n    \"fechaEmision\": \"2026-02-10T10:30:00Z\",\r\n    \"montoTotalSinImpuestos\": 2000.00,\r\n    \"igvTotal\": 360.00,\r\n    \"montoTotal\": 2360.00,\r\n    \"items\": [\r\n      {\r\n        \"descripcion\": \"Camara AZ - 400\",\r\n        \"precioUnitario\": 200.00,\r\n        \"cantidad\": 5,\r\n        \"precioTotal\": 1000.00,\r\n        \"igvTotal\": 180.00\r\n      },\r\n      {\r\n        \"descripcion\": \"Tablet Lenovo\",\r\n        \"precioUnitario\": 500.00,\r\n        \"cantidad\": 2,\r\n        \"precioTotal\": 1000.00,\r\n        \"igvTotal\": 180.00\r\n      }\r\n    ]\r\n  }",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/documents",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "documents"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Listar Todos los Documentos",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BASE_URL}}/documents",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "documents"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Obtener Documento por ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BASE_URL}}/documents/ABCD-012345670",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "documents",
+                "ABCD-012345670"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Actualizar Documento",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"idDocumento\": \"ABCD-012345678\",\r\n    \"rucEmisor\": \"20123456789\",\r\n    \"rucReceptor\": \"20987654321\",\r\n    \"fechaEmision\": \"2026-02-09T10:30:00Z\",\r\n    \"montoTotalSinImpuestos\": 2000.00,\r\n    \"igvTotal\": 360.00,\r\n    \"montoTotal\": 2360.00,\r\n    \"items\": [\r\n      {\r\n        \"descripcion\": \"Producto C\",\r\n        \"precioUnitario\": 200.00,\r\n        \"cantidad\": 10,\r\n        \"precioTotal\": 2000.00,\r\n        \"igvTotal\": 360.00\r\n      }\r\n    ]\r\n  }",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/documents/ABCD-012345678",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "documents",
+                "ABCD-012345678"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Eliminar Documento",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/documents/ABCD-012345681",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "documents",
+                "ABCD-012345681"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Verificar Documento",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"documento\": {\r\n        \"idDocumento\": \"ABCD-012345670\",\r\n        \"uuid\": \"e58a290f-5225-468b-b4ee-ec4b4587acc6\",\r\n        \"rucEmisor\": \"20123456789\",\r\n        \"rucReceptor\": \"20987654321\",\r\n        \"fechaEmision\": \"2026-02-10T10:30:00Z\",\r\n        \"montoTotalSinImpuestos\": 2000,\r\n        \"igvTotal\": 360,\r\n        \"montoTotal\": 2360,\r\n        \"items\": [\r\n            {\r\n                \"descripcion\": \"Camara AZ - 400\",\r\n                \"precioUnitario\": 200,\r\n                \"cantidad\": 5,\r\n                \"precioTotal\": 1000,\r\n                \"igvTotal\": 180\r\n            },\r\n            {\r\n                \"descripcion\": \"Tablet Lenovo\",\r\n                \"precioUnitario\": 500,\r\n                \"cantidad\": 2,\r\n                \"precioTotal\": 1000,\r\n                \"igvTotal\": 180\r\n            }\r\n        ]\r\n    },\r\n    \"firma\": \"qeWg2ZhFWFU3ucS3impnE17EFg2oRLTirTGowF1ve0xprC7l3ljBsRZ/uoO7bGoucUEUhh7iVt28g8ztbAyPCgkCwR5VWvwW7Z59xZ/6OHxD2M5lwXOwUEctwk49RqVclLOpfvEfLZV8aHkCmSAUzOh8n+7M8L8Kfh52Y5ZHLRb2eF2Pyt2DxcJjeugrRhc7f4IFoyPUevr1v9C7wKN66NNbz1a8TXoDhc+ndgpEj1UizZwQfy6PsrR4j52uNK3CXQagBNZMAz+fMcMjvTB+98oZarDbLt4mbb061xW/433c9A6XdC4t3OsrVsb72J7vZ4bYrHHWKaW9s/BASJUXug==\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/documents/verify",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "documents",
+                "verify"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}
