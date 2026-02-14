@@ -51,7 +51,9 @@ services:
       - efact-network
 
   vault:
-    image: hashicorp/vault:1.16
+    build:
+      context: ./vault
+      dockerfile: Dockerfile
     container_name: vault
     restart: always
     ports:
@@ -64,8 +66,6 @@ services:
     volumes:
       - vault_data:/vault/data
       - vault_logs:/vault/logs
-      - ./vault/docker-entrypoint.sh:/vault/docker-entrypoint.sh:ro
-    entrypoint: ["/vault/docker-entrypoint.sh"]
     networks:
       - efact-network
     healthcheck:
