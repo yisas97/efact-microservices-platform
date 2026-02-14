@@ -20,7 +20,7 @@ func Recovery() gin.HandlerFunc {
 					zap.Stack("stacktrace"),
 				)
 
-				appErr := errors.NuevoErrorServidorInterno("Ocurrió un error inesperado en el servidor")
+				appErr := errors.ErrorInterno("Ocurrió un error inesperado en el servidor")
 				c.JSON(http.StatusInternalServerError, appErr.AJson())
 				c.Abort()
 			}

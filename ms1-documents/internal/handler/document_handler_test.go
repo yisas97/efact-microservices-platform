@@ -40,7 +40,7 @@ func (m *mockService) ObtenerDocumentoPorID(ctx context.Context, id string) (*do
 	if m.getDocumentByIDFunc != nil {
 		return m.getDocumentByIDFunc(ctx, id)
 	}
-	return nil, errors.NuevoErrorNoEncontrado("not found")
+	return nil, errors.ErrorNoEncontrado("not found")
 }
 
 func (m *mockService) ActualizarDocumento(ctx context.Context, id string, doc *domain.Document) error {
@@ -61,7 +61,7 @@ func (m *mockService) VerificarDocumento(ctx context.Context, documento *domain.
 	if m.verifyDocumentFunc != nil {
 		return m.verifyDocumentFunc(ctx, documento, firma)
 	}
-	return false, errors.NuevoErrorNoEncontrado("not found")
+	return false, errors.ErrorNoEncontrado("not found")
 }
 
 func setupRouter(handler *DocumentHandler) *gin.Engine {
@@ -144,7 +144,7 @@ func TestCreateDocument_InvalidJSON(t *testing.T) {
 func TestCreateDocument_ValidationError(t *testing.T) {
 	svc := &mockService{
 		createDocumentFunc: func(ctx context.Context, doc *domain.Document) error {
-			return errors.NuevoErrorValidacion("invalid document")
+			return errors.ErrorValidacion("invalid document")
 		},
 	}
 	handler := NewDocumentHandler(svc)
@@ -205,7 +205,7 @@ func TestGetDocuments_Success(t *testing.T) {
 func TestGetDocuments_Error(t *testing.T) {
 	svc := &mockService{
 		getAllDocumentsFunc: func(ctx context.Context) ([]domain.Document, error) {
-			return nil, errors.NuevoErrorServidorInterno("database error")
+			return nil, errors.ErrorInterno("database error")
 		},
 	}
 	handler := NewDocumentHandler(svc)
@@ -231,7 +231,7 @@ func TestGetDocument_Success(t *testing.T) {
 			if id == "FACT-123456789" {
 				return expectedDoc, nil
 			}
-			return nil, errors.NuevoErrorNoEncontrado("not found")
+			return nil, errors.ErrorNoEncontrado("not found")
 		},
 	}
 	handler := NewDocumentHandler(svc)
@@ -256,7 +256,7 @@ func TestGetDocument_Success(t *testing.T) {
 func TestGetDocument_NotFound(t *testing.T) {
 	svc := &mockService{
 		getDocumentByIDFunc: func(ctx context.Context, id string) (*domain.Document, error) {
-			return nil, errors.NuevoErrorNoEncontrado("not found")
+			return nil, errors.ErrorNoEncontrado("not found")
 		},
 	}
 	handler := NewDocumentHandler(svc)
@@ -329,7 +329,7 @@ func TestUpdateDocument_InvalidJSON(t *testing.T) {
 func TestUpdateDocument_NotFound(t *testing.T) {
 	svc := &mockService{
 		updateDocumentFunc: func(ctx context.Context, id string, doc *domain.Document) error {
-			return errors.NuevoErrorNoEncontrado("not found")
+			return errors.ErrorNoEncontrado("not found")
 		},
 	}
 	handler := NewDocumentHandler(svc)
@@ -521,7 +521,7 @@ func TestVerifyDocument_InvalidJSON(t *testing.T) {
 func TestVerifyDocument_NotFound(t *testing.T) {
 	svc := &mockService{
 		verifyDocumentFunc: func(ctx context.Context, documento *domain.Document, firma string) (bool, error) {
-			return false, errors.NuevoErrorNoEncontrado("not found")
+			return false, errors.ErrorNoEncontrado("not found")
 		},
 	}
 	handler := NewDocumentHandler(svc)

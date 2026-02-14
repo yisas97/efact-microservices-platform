@@ -45,7 +45,7 @@ func (s *documentService) CrearDocumento(contexto context.Context, documento *do
 	}
 
 	if err := s.publisher.PublishDocumentCreated(documento.IDDocumento, documento.UUID); err != nil {
-		return errors.NuevoErrorServidorInterno("Error al publicar mensaje a RabbitMQ")
+		return errors.ErrorInterno("Error al publicar mensaje a RabbitMQ")
 	}
 
 	return nil
@@ -70,8 +70,17 @@ func (s *documentService) ActualizarDocumento(contexto context.Context, id strin
 	}
 
 	documento.UUID = documentoExistente.UUID
+	documento.Validacion = nil
 
-	return s.repo.Actualizar(contexto, id, documento)
+	if err := s.repo.Actualizar(contexto, id, documento); err != nil {
+		return err
+	}
+
+	if err := s.publisher.PublishDocumentCreated(documento.IDDocumento, documento.UUID); err != nil {
+		return errors.ErrorInterno("Error al publicar mensaje a RabbitMQ")
+	}
+
+	return nil
 }
 
 func (s *documentService) EliminarDocumento(contexto context.Context, id string) error {
@@ -79,9 +88,22 @@ func (s *documentService) EliminarDocumento(contexto context.Context, id string)
 }
 
 func (s *documentService) VerificarDocumento(contexto context.Context, documento *domain.Document, firma string) (bool, error) {
+	documentoExistente, err := s.repo.BuscarPorID(contexto, documento.IDDocumento)
+	if err != nil {
+		return false, errors.ErrorNoEncontrado("Documento no existe en el sistema")
+	}
+
+	if documentoExistente.Validacion == nil {
+		return false, errors.ErrorValidacion("Documento no ha sido validado")
+	}
+
+	if documentoExistente.Validacion.Firma != firma {
+		return false, nil
+	}
+
 	clienteRPC, err := utils.NuevoClienteRPC(s.rabbitmqURL)
 	if err != nil {
-		return false, errors.NuevoErrorServidorInterno("Error al conectar con el servicio de validacion")
+		return false, errors.ErrorInterno("Error al conectar con el servicio de validacion")
 	}
 	defer clienteRPC.Cerrar()
 
@@ -94,7 +116,7 @@ func (s *documentService) VerificarDocumento(contexto context.Context, documento
 	config.Logger.Info("Respuesta de verificacion recibida", zap.Any("respuesta", respuesta))
 	config.Logger.Info("Solicitud de verificacion enviada", zap.Any("error", err))
 	if err != nil {
-		return false, errors.NuevoErrorServidorInterno("Error al verificar la firma con el servicio de validacion")
+		return false, errors.ErrorInterno("Error al verificar la firma con el servicio de validacion")
 	}
 
 	return respuesta.Valido, nil

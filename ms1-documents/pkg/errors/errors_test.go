@@ -5,8 +5,8 @@ import (
 	"testing"
 )
 
-func TestNuevoErrorValidacion(t *testing.T) {
-	err := NuevoErrorValidacion("invalid input")
+func TestErrorValidacion(t *testing.T) {
+	err := ErrorValidacion("invalid input")
 
 	if err.Code != http.StatusBadRequest {
 		t.Errorf("Expected code %d, got %d", http.StatusBadRequest, err.Code)
@@ -21,8 +21,8 @@ func TestNuevoErrorValidacion(t *testing.T) {
 	}
 }
 
-func TestNuevoErrorNoEncontrado(t *testing.T) {
-	err := NuevoErrorNoEncontrado("resource not found")
+func TestErrorNoEncontrado(t *testing.T) {
+	err := ErrorNoEncontrado("resource not found")
 
 	if err.Code != http.StatusNotFound {
 		t.Errorf("Expected code %d, got %d", http.StatusNotFound, err.Code)
@@ -37,8 +37,8 @@ func TestNuevoErrorNoEncontrado(t *testing.T) {
 	}
 }
 
-func TestNuevoErrorConflicto(t *testing.T) {
-	err := NuevoErrorConflicto("resource already exists")
+func TestErrorConflicto(t *testing.T) {
+	err := ErrorConflicto("resource already exists")
 
 	if err.Code != http.StatusConflict {
 		t.Errorf("Expected code %d, got %d", http.StatusConflict, err.Code)
@@ -53,8 +53,8 @@ func TestNuevoErrorConflicto(t *testing.T) {
 	}
 }
 
-func TestNuevoErrorServidorInterno(t *testing.T) {
-	err := NuevoErrorServidorInterno("something went wrong")
+func TestErrorInterno(t *testing.T) {
+	err := ErrorInterno("something went wrong")
 
 	if err.Code != http.StatusInternalServerError {
 		t.Errorf("Expected code %d, got %d", http.StatusInternalServerError, err.Code)
@@ -126,25 +126,25 @@ func TestAppError_AllStatusCodes(t *testing.T) {
 	}{
 		{
 			name:         "ValidationError",
-			constructor:  NuevoErrorValidacion,
+			constructor:  ErrorValidacion,
 			expectedCode: http.StatusBadRequest,
 			expectedType: "Bad Request",
 		},
 		{
 			name:         "NotFoundError",
-			constructor:  NuevoErrorNoEncontrado,
+			constructor:  ErrorNoEncontrado,
 			expectedCode: http.StatusNotFound,
 			expectedType: "Not Found",
 		},
 		{
 			name:         "ConflictError",
-			constructor:  NuevoErrorConflicto,
+			constructor:  ErrorConflicto,
 			expectedCode: http.StatusConflict,
 			expectedType: "Conflict",
 		},
 		{
 			name:         "InternalServerError",
-			constructor:  NuevoErrorServidorInterno,
+			constructor:  ErrorInterno,
 			expectedCode: http.StatusInternalServerError,
 			expectedType: "Internal Server Error",
 		},
@@ -170,7 +170,7 @@ func TestAppError_AllStatusCodes(t *testing.T) {
 }
 
 func TestAppError_ErrorInterface(t *testing.T) {
-	var err error = NuevoErrorValidacion("test")
+	var err error = ErrorValidacion("test")
 
 	if err.Error() != "test" {
 		t.Errorf("AppError does not implement error interface correctly")
@@ -178,7 +178,7 @@ func TestAppError_ErrorInterface(t *testing.T) {
 }
 
 func TestAppError_ToJSON_HasAllFields(t *testing.T) {
-	err := NuevoErrorServidorInterno("critical error")
+	err := ErrorInterno("critical error")
 	json := err.AJson()
 
 	requiredFields := []string{"status", "error", "message"}

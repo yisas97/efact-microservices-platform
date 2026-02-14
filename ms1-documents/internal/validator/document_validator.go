@@ -49,14 +49,14 @@ func (v *DocumentValidator) ValidarDocumento(doc *domain.Document) error {
 
 func (v *DocumentValidator) validarIDDocumento(id string) error {
 	if !idDocumentoRegex.MatchString(id) {
-		return errors.NuevoErrorValidacion("formato de idDocumento inválido. Debe ser ABCD-012345678")
+		return errors.ErrorValidacion("formato de idDocumento inválido. Debe ser ABCD-012345678")
 	}
 	return nil
 }
 
 func (v *DocumentValidator) validarRUC(ruc, nombreCampo string) error {
 	if !rucRegex.MatchString(ruc) {
-		return errors.NuevoErrorValidacion(fmt.Sprintf("%s debe tener 11 dígitos", nombreCampo))
+		return errors.ErrorValidacion(fmt.Sprintf("%s debe tener 11 dígitos", nombreCampo))
 	}
 	return nil
 }
@@ -79,7 +79,7 @@ func (v *DocumentValidator) validarMontos(doc *domain.Document) error {
 
 func (v *DocumentValidator) validarItems(items []domain.Item) error {
 	if len(items) == 0 {
-		return errors.NuevoErrorValidacion("debe haber al menos 1 item")
+		return errors.ErrorValidacion("debe haber al menos 1 item")
 	}
 
 	for indice, item := range items {
@@ -119,7 +119,7 @@ func (v *DocumentValidator) validarFechaEmision(doc *domain.Document) error {
 
 	_, err := time.Parse(time.RFC3339, doc.FechaEmision)
 	if err != nil {
-		return errors.NuevoErrorValidacion("fechaEmision debe estar en formato ISO 8601")
+		return errors.ErrorValidacion("fechaEmision debe estar en formato ISO 8601")
 	}
 
 	return nil
@@ -127,21 +127,21 @@ func (v *DocumentValidator) validarFechaEmision(doc *domain.Document) error {
 
 func validarMontoPositivo(valor float64, nombreCampo string) error {
 	if valor <= 0 {
-		return errors.NuevoErrorValidacion(fmt.Sprintf("%s debe ser positivo", nombreCampo))
+		return errors.ErrorValidacion(fmt.Sprintf("%s debe ser positivo", nombreCampo))
 	}
 	return nil
 }
 
 func validarMontoPositivoEnItem(valor float64, nombreCampo string, indice int) error {
 	if valor <= 0 {
-		return errors.NuevoErrorValidacion(fmt.Sprintf("%s del item %d debe ser positivo", nombreCampo, indice))
+		return errors.ErrorValidacion(fmt.Sprintf("%s del item %d debe ser positivo", nombreCampo, indice))
 	}
 	return nil
 }
 
 func validarEnteroPositivoEnItem(valor int, nombreCampo string, indice int) error {
 	if valor <= 0 {
-		return errors.NuevoErrorValidacion(fmt.Sprintf("%s del item %d debe ser positiva", nombreCampo, indice))
+		return errors.ErrorValidacion(fmt.Sprintf("%s del item %d debe ser positiva", nombreCampo, indice))
 	}
 	return nil
 }
