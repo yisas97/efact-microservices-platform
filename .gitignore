@@ -2,7 +2,6 @@
 *.log
 
 ms1-documents/ms1-documents
-ms1-documents/go.sum
 
 ms2-validator/target/
 ms2-validator/.gradle/
