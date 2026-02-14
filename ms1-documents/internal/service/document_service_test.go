@@ -34,7 +34,7 @@ func (m *mockRepository) BuscarPorID(ctx context.Context, id string) (*domain.Do
 	if m.findByIDFunc != nil {
 		return m.findByIDFunc(ctx, id)
 	}
-	return nil, errors.NuevoErrorNoEncontrado("not found")
+	return nil, errors.ErrorNoEncontrado("not found")
 }
 
 func (m *mockRepository) Actualizar(ctx context.Context, id string, doc *domain.Document) error {
@@ -119,7 +119,7 @@ func TestCreateDocument_Success(t *testing.T) {
 func TestCreateDocument_RepositoryError(t *testing.T) {
 	repo := &mockRepository{
 		createFunc: func(ctx context.Context, doc *domain.Document) error {
-			return errors.NuevoErrorServidorInterno("database error")
+			return errors.ErrorInterno("database error")
 		},
 	}
 	publisher := &mockPublisher{}
@@ -159,7 +159,7 @@ func TestCreateDocument_PublisherError(t *testing.T) {
 	repo := &mockRepository{}
 	publisher := &mockPublisher{
 		publishFunc: func(documentID, uuid string) error {
-			return errors.NuevoErrorServidorInterno("rabbitmq error")
+			return errors.ErrorInterno("rabbitmq error")
 		},
 	}
 	svc := NewDocumentService(repo, publisher, validator.NewDocumentValidator(), "amqp://guest:guest@localhost:5672/")
@@ -234,7 +234,7 @@ func TestGetAllDocuments_Success(t *testing.T) {
 func TestGetAllDocuments_Error(t *testing.T) {
 	repo := &mockRepository{
 		findAllFunc: func(ctx context.Context) ([]domain.Document, error) {
-			return nil, errors.NuevoErrorServidorInterno("database error")
+			return nil, errors.ErrorInterno("database error")
 		},
 	}
 	publisher := &mockPublisher{}
@@ -259,7 +259,7 @@ func TestGetDocumentByID_Success(t *testing.T) {
 			if id == "FACT-123456789" {
 				return expectedDoc, nil
 			}
-			return nil, errors.NuevoErrorNoEncontrado("not found")
+			return nil, errors.ErrorNoEncontrado("not found")
 		},
 	}
 	publisher := &mockPublisher{}
@@ -280,7 +280,7 @@ func TestGetDocumentByID_Success(t *testing.T) {
 func TestGetDocumentByID_NotFound(t *testing.T) {
 	repo := &mockRepository{
 		findByIDFunc: func(ctx context.Context, id string) (*domain.Document, error) {
-			return nil, errors.NuevoErrorNoEncontrado("not found")
+			return nil, errors.ErrorNoEncontrado("not found")
 		},
 	}
 	publisher := &mockPublisher{}
@@ -344,7 +344,7 @@ func TestUpdateDocument_Success(t *testing.T) {
 func TestUpdateDocument_NotFound(t *testing.T) {
 	repo := &mockRepository{
 		findByIDFunc: func(ctx context.Context, id string) (*domain.Document, error) {
-			return nil, errors.NuevoErrorNoEncontrado("not found")
+			return nil, errors.ErrorNoEncontrado("not found")
 		},
 	}
 	publisher := &mockPublisher{}
@@ -396,7 +396,7 @@ func TestDeleteDocument_Success(t *testing.T) {
 func TestDeleteDocument_NotFound(t *testing.T) {
 	repo := &mockRepository{
 		deleteFunc: func(ctx context.Context, id string) error {
-			return errors.NuevoErrorNoEncontrado("not found")
+			return errors.ErrorNoEncontrado("not found")
 		},
 	}
 	publisher := &mockPublisher{}

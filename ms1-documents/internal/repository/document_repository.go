@@ -27,7 +27,7 @@ func (r *documentRepository) Crear(contexto context.Context, documento *domain.D
 		if dupErr := utils.HandleMongoDuplicateError(err, documento.IDDocumento); dupErr != nil {
 			return dupErr
 		}
-		return errors.NuevoErrorServidorInterno("Error al crear documento en la base de datos")
+		return errors.ErrorInterno("Error al crear documento en la base de datos")
 	}
 	return nil
 }
@@ -35,13 +35,13 @@ func (r *documentRepository) Crear(contexto context.Context, documento *domain.D
 func (r *documentRepository) BuscarTodos(contexto context.Context) ([]domain.Document, error) {
 	cursor, err := r.db.Collection.Find(contexto, bson.M{})
 	if err != nil {
-		return nil, errors.NuevoErrorServidorInterno("Error al obtener documentos de la base de datos")
+		return nil, errors.ErrorInterno("Error al obtener documentos de la base de datos")
 	}
 	defer cursor.Close(contexto)
 
 	var documentos []domain.Document
 	if err = cursor.All(contexto, &documentos); err != nil {
-		return nil, errors.NuevoErrorServidorInterno("Error al decodificar documentos")
+		return nil, errors.ErrorInterno("Error al decodificar documentos")
 	}
 
 	if documentos == nil {
@@ -58,7 +58,7 @@ func (r *documentRepository) BuscarPorID(contexto context.Context, id string) (*
 		if err == mongo.ErrNoDocuments {
 			return nil, utils.DocumentNotFoundError(id)
 		}
-		return nil, errors.NuevoErrorServidorInterno("Error al buscar documento en la base de datos")
+		return nil, errors.ErrorInterno("Error al buscar documento en la base de datos")
 	}
 	return &documento, nil
 }
@@ -74,7 +74,7 @@ func (r *documentRepository) Actualizar(contexto context.Context, id string, doc
 		if dupErr := utils.HandleMongoDuplicateError(err, documento.IDDocumento); dupErr != nil {
 			return dupErr
 		}
-		return errors.NuevoErrorServidorInterno("Error al actualizar documento en la base de datos")
+		return errors.ErrorInterno("Error al actualizar documento en la base de datos")
 	}
 
 	if result.MatchedCount == 0 {
@@ -87,7 +87,7 @@ func (r *documentRepository) Actualizar(contexto context.Context, id string, doc
 func (r *documentRepository) Eliminar(contexto context.Context, id string) error {
 	result, err := r.db.Collection.DeleteOne(contexto, utils.DocumentIDFilter(id))
 	if err != nil {
-		return errors.NuevoErrorServidorInterno("Error al eliminar documento de la base de datos")
+		return errors.ErrorInterno("Error al eliminar documento de la base de datos")
 	}
 
 	if result.DeletedCount == 0 {

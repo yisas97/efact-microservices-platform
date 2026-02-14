@@ -24,7 +24,7 @@ func (e *AppError) AJson() map[string]interface{} {
 	}
 }
 
-func NuevoErrorValidacion(mensaje string) *AppError {
+func ErrorValidacion(mensaje string) *AppError {
 	return &AppError{
 		Code:      http.StatusBadRequest,
 		ErrorType: "Bad Request",
@@ -32,7 +32,7 @@ func NuevoErrorValidacion(mensaje string) *AppError {
 	}
 }
 
-func NuevoErrorNoEncontrado(mensaje string) *AppError {
+func ErrorNoEncontrado(mensaje string) *AppError {
 	return &AppError{
 		Code:      http.StatusNotFound,
 		ErrorType: "Not Found",
@@ -40,7 +40,7 @@ func NuevoErrorNoEncontrado(mensaje string) *AppError {
 	}
 }
 
-func NuevoErrorConflicto(mensaje string) *AppError {
+func ErrorConflicto(mensaje string) *AppError {
 	return &AppError{
 		Code:      http.StatusConflict,
 		ErrorType: "Conflict",
@@ -48,7 +48,7 @@ func NuevoErrorConflicto(mensaje string) *AppError {
 	}
 }
 
-func NuevoErrorServidorInterno(mensaje string) *AppError {
+func ErrorInterno(mensaje string) *AppError {
 	return &AppError{
 		Code:      http.StatusInternalServerError,
 		ErrorType: "Internal Server Error",

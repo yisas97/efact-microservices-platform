@@ -14,11 +14,11 @@ func DocumentIDFilter(id string) bson.M {
 
 func HandleMongoDuplicateError(err error, idDocumento string) error {
 	if mongo.IsDuplicateKeyError(err) {
-		return errors.NuevoErrorConflicto(fmt.Sprintf("Ya existe un documento con ID %s", idDocumento))
+		return errors.ErrorConflicto(fmt.Sprintf("Ya existe un documento con ID %s", idDocumento))
 	}
 	return nil
 }
 
 func DocumentNotFoundError(id string) error {
-	return errors.NuevoErrorNoEncontrado(fmt.Sprintf("Documento con ID %s no encontrado", id))
+	return errors.ErrorNoEncontrado(fmt.Sprintf("Documento con ID %s no encontrado", id))
 }

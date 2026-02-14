@@ -16,7 +16,7 @@ func ManejarErrorServicio(c *gin.Context, err error, mensajeFallback string) boo
 	if appErr, ok := err.(*errors.AppError); ok {
 		RespondWithError(c, appErr)
 	} else {
-		RespondWithError(c, errors.NuevoErrorServidorInterno(mensajeFallback))
+		RespondWithError(c, errors.ErrorInterno(mensajeFallback))
 	}
 	return true
 }
@@ -35,7 +35,7 @@ func CrearContextoConTimeoutDB(contextoBase context.Context) (context.Context, c
 
 func ValidarJSON(c *gin.Context, objeto interface{}) bool {
 	if err := c.ShouldBindJSON(objeto); err != nil {
-		RespondWithError(c, errors.NuevoErrorValidacion(ErrorInvalidJSON))
+		RespondWithError(c, errors.ErrorValidacion(ErrorInvalidJSON))
 		return true
 	}
 	return false
