@@ -1,10 +1,9 @@
 {
   "info": {
-    "_postman_id": "3a9801a4-1f95-4230-ac74-33ac8e8aaba9",
+    "_postman_id": "9bb96d64-8d1c-494d-b124-61ad0be3bab6",
     "name": "EFACT",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-    "_exporter_id": "17360341",
-    "_collection_link": "https://go.postman.co/collection/17360341-3a9801a4-1f95-4230-ac74-33ac8e8aaba9?source=collection_link"
+    "_exporter_id": "17360341"
   },
   "item": [
     {
@@ -389,7 +388,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n    \"idDocumento\": \"ABCD-012345678\",\r\n    \"rucEmisor\": \"20123456789\",\r\n    \"rucReceptor\": \"20987654321\",\r\n    \"fechaEmision\": \"2026-02-09T10:30:00Z\",\r\n    \"montoTotalSinImpuestos\": 2000.00,\r\n    \"igvTotal\": 360.00,\r\n    \"montoTotal\": 2360.00,\r\n    \"items\": [\r\n      {\r\n        \"descripcion\": \"Producto C\",\r\n        \"precioUnitario\": 200.00,\r\n        \"cantidad\": 10,\r\n        \"precioTotal\": 2000.00,\r\n        \"igvTotal\": 360.00\r\n      }\r\n    ]\r\n  }",
+              "raw": "{\r\n    \"idDocumento\": \"ABCD-012345670\",\r\n    \"rucEmisor\": \"20123456789\",\r\n    \"rucReceptor\": \"20987654321\",\r\n    \"fechaEmision\": \"2026-02-09T10:30:00Z\",\r\n    \"montoTotalSinImpuestos\": 2000.00,\r\n    \"igvTotal\": 360.00,\r\n    \"montoTotal\": 2360.00,\r\n    \"items\": [\r\n      {\r\n        \"descripcion\": \"Producto C\",\r\n        \"precioUnitario\": 200.00,\r\n        \"cantidad\": 10,\r\n        \"precioTotal\": 2000.00,\r\n        \"igvTotal\": 360.00\r\n      }\r\n    ]\r\n  }",
               "options": {
                 "raw": {
                   "language": "json"
@@ -397,13 +396,13 @@
               }
             },
             "url": {
-              "raw": "{{BASE_URL}}/documents/ABCD-012345678",
+              "raw": "{{BASE_URL}}/documents/ABCD-012345670",
               "host": [
                 "{{BASE_URL}}"
               ],
               "path": [
                 "documents",
-                "ABCD-012345678"
+                "ABCD-012345670"
               ]
             }
           },
@@ -424,13 +423,13 @@
               }
             },
             "url": {
-              "raw": "{{BASE_URL}}/documents/ABCD-012345681",
+              "raw": "{{BASE_URL}}/documents/ABCD-012345678",
               "host": [
                 "{{BASE_URL}}"
               ],
               "path": [
                 "documents",
-                "ABCD-012345681"
+                "ABCD-012345678"
               ]
             }
           },
@@ -443,7 +442,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n    \"documento\": {\r\n        \"idDocumento\": \"ABCD-012345670\",\r\n        \"uuid\": \"e58a290f-5225-468b-b4ee-ec4b4587acc6\",\r\n        \"rucEmisor\": \"20123456789\",\r\n        \"rucReceptor\": \"20987654321\",\r\n        \"fechaEmision\": \"2026-02-10T10:30:00Z\",\r\n        \"montoTotalSinImpuestos\": 2000,\r\n        \"igvTotal\": 360,\r\n        \"montoTotal\": 2360,\r\n        \"items\": [\r\n            {\r\n                \"descripcion\": \"Camara AZ - 400\",\r\n                \"precioUnitario\": 200,\r\n                \"cantidad\": 5,\r\n                \"precioTotal\": 1000,\r\n                \"igvTotal\": 180\r\n            },\r\n            {\r\n                \"descripcion\": \"Tablet Lenovo\",\r\n                \"precioUnitario\": 500,\r\n                \"cantidad\": 2,\r\n                \"precioTotal\": 1000,\r\n                \"igvTotal\": 180\r\n            }\r\n        ]\r\n    },\r\n    \"firma\": \"qeWg2ZhFWFU3ucS3impnE17EFg2oRLTirTGowF1ve0xprC7l3ljBsRZ/uoO7bGoucUEUhh7iVt28g8ztbAyPCgkCwR5VWvwW7Z59xZ/6OHxD2M5lwXOwUEctwk49RqVclLOpfvEfLZV8aHkCmSAUzOh8n+7M8L8Kfh52Y5ZHLRb2eF2Pyt2DxcJjeugrRhc7f4IFoyPUevr1v9C7wKN66NNbz1a8TXoDhc+ndgpEj1UizZwQfy6PsrR4j52uNK3CXQagBNZMAz+fMcMjvTB+98oZarDbLt4mbb061xW/433c9A6XdC4t3OsrVsb72J7vZ4bYrHHWKaW9s/BASJUXug==\"\r\n}",
+              "raw": "{\r\n    \"documento\": {\r\n        \"idDocumento\": \"ABCD-012345670\",\r\n        \"uuid\": \"e581da69-c0a3-4654-908a-36bcff872272\",\r\n        \"rucEmisor\": \"20123456789\",\r\n        \"rucReceptor\": \"20987654321\",\r\n        \"fechaEmision\": \"2026-02-09T10:30:00Z\",\r\n        \"montoTotalSinImpuestos\": 2000,\r\n        \"igvTotal\": 360,\r\n        \"montoTotal\": 2360,\r\n        \"items\": [\r\n            {\r\n                \"descripcion\": \"Producto C\",\r\n                \"precioUnitario\": 200,\r\n                \"cantidad\": 10,\r\n                \"precioTotal\": 2000,\r\n                \"igvTotal\": 360\r\n            }\r\n        ]\r\n    },\r\n    \"firma\": \"rDu6v/EF3iZDQm00J2C6koI9oHzIZROiPzmwi808FGQtcXaenuP7Zb+UjjSOSEPcegPovecYZEii1yUmOJitp81jHWm4aWyhgQTHAWhpGZXnplNEz46y8Ja3KuzW97EflrFkga2w6MGT4W+Ldi/WmAAUoo5YG8jLQ7z1WZ9GYH/EaIq9NTbMspweH62aQWCPibZTGCvg6ZexzlSr0W6vJSiuTpPX22rSx6KH4iipAQklKMQe/aDhX+534Tr5lJNDiMdq1CyeTP92w8ulKVe1tajdLmTgx/Esxp+oGhcYgAFFYhVsOa3ZqtkvZG5nAMBaJpSXh5sbdR+hGkiPEw4OlA==\"\r\n}",
               "options": {
                 "raw": {
                   "language": "json"
