@@ -2,6 +2,26 @@
 
 Sistema de microservicios para gestión, validación y firma digital de documentos electrónicos.
 
+## Índice
+
+- [Definición](#definición)
+- [Componentes](#componentes)
+  - [ms1-documents](#ms1-documents)
+  - [ms2-validator](#ms2-validator)
+  - [MongoDB](#mongodb)
+  - [RabbitMQ](#rabbitmq)
+  - [Vault](#vault)
+- [Arquitectura](#arquitectura)
+- [Requisitos](#requisitos)
+- [Levantar el Sistema](#levantar-el-sistema)
+- [Portales de Acceso](#portales-de-acceso)
+  - [API y Documentación](#api-y-documentación)
+  - [Gestión de Infraestructura](#gestión-de-infraestructura)
+  - [Monitoreo y Logs](#monitoreo-y-logs)
+- [Validaciones](#validaciones)
+- [Ejemplo de Uso](#ejemplo-de-uso)
+- [Detener](#detener)
+
 ## Definición
 
 Plataforma distribuida que permite crear documentos fiscales, validar cálculos de IGV y generar firmas digitales RSA mediante procesamiento asíncrono. Los documentos son validados automáticamente y firmados si cumplen con las reglas de negocio.
