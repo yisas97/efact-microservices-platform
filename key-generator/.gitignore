@@ -1,0 +1,17 @@
+bin/
+*.class
+*-keys.txt
+*.pem
+*.key
+.idea/
+.vscode/
+*.iml
+.project
+.classpath
+.settings/
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+*.log

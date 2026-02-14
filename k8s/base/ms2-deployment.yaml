@@ -1,0 +1,124 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: ms2-validator-service
+  namespace: efact
+  labels:
+    app: ms2-validator
+spec:
+  type: ClusterIP
+  ports:
+    - port: 8080
+      targetPort: 8080
+      protocol: TCP
+      name: http
+  selector:
+    app: ms2-validator
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ms2-validator
+  namespace: efact
+  labels:
+    app: ms2-validator
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: ms2-validator
+  template:
+    metadata:
+      labels:
+        app: ms2-validator
+    spec:
+      initContainers:
+      - name: wait-for-vault
+        image: busybox:1.28
+        command: ['sh', '-c', 'until nc -z vault-service 8200; do echo waiting for vault; sleep 2; done;']
+      containers:
+      - name: ms2-validator
+        image: yisas97/ms2-validator:2.0.0-vault
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8080
+          name: http
+        env:
+        - name: SPRING_PROFILES_ACTIVE
+          valueFrom:
+            configMapKeyRef:
+              name: efact-config
+              key: SPRING_PROFILES_ACTIVE
+        - name: MONGO_URI
+          valueFrom:
+            secretKeyRef:
+              name: efact-secrets
+              key: MONGO_DB_AUTH
+        - name: MONGO_DB
+          valueFrom:
+            configMapKeyRef:
+              name: efact-config
+              key: MONGO_INITDB_DATABASE
+        - name: RABBITMQ_HOST
+          valueFrom:
+            configMapKeyRef:
+              name: efact-config
+              key: RABBITMQ_HOST
+        - name: RABBITMQ_PORT
+          valueFrom:
+            configMapKeyRef:
+              name: efact-config
+              key: RABBITMQ_PORT
+        - name: RABBITMQ_USER
+          valueFrom:
+            secretKeyRef:
+              name: efact-secrets
+              key: RABBITMQ_DEFAULT_USER
+        - name: RABBITMQ_PASS
+          valueFrom:
+            secretKeyRef:
+              name: efact-secrets
+              key: RABBITMQ_DEFAULT_PASS
+        - name: RABBITMQ_QUEUE
+          valueFrom:
+            configMapKeyRef:
+              name: efact-config
+              key: RABBITMQ_QUEUE
+        - name: VAULT_ADDR
+          valueFrom:
+            configMapKeyRef:
+              name: efact-config
+              key: VAULT_ADDR
+        - name: VAULT_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: efact-secrets
+              key: VAULT_TOKEN
+        - name: ELASTICSEARCH_URL
+          valueFrom:
+            configMapKeyRef:
+              name: efact-config
+              key: ELASTICSEARCH_URL
+        resources:
+          requests:
+            memory: "512Mi"
+            cpu: "250m"
+          limits:
+            memory: "1Gi"
+            cpu: "500m"
+        livenessProbe:
+          httpGet:
+            path: /actuator/health
+            port: 8080
+          initialDelaySeconds: 60
+          periodSeconds: 30
+          timeoutSeconds: 10
+          failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: /actuator/health
+            port: 8080
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3

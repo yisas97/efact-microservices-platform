@@ -1,0 +1,180 @@
+services:
+  mongodb:
+    image: mongo:latest
+    container_name: mongodb
+    restart: always
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: admin123
+      MONGO_INITDB_DATABASE: efact_db
+    volumes:
+      - mongodb_data:/data/db
+    networks:
+      - efact-network
+
+  rabbitmq:
+    image: rabbitmq:4.2.3-management
+    container_name: rabbitmq
+    restart: always
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: admin
+      RABBITMQ_DEFAULT_PASS: admin123
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+    networks:
+      - efact-network
+
+  ms1-documents:
+    build:
+      context: ./ms1-documents
+      dockerfile: Dockerfile
+    #image: yisas97/ms1-documents:1.0.0
+    container_name: ms1-documents
+    restart: always
+    ports:
+      - "5000:5000"
+    environment:
+      MONGO_URI: mongodb://admin:admin123@mongodb:27017
+      MONGO_DB: efact_db
+      RABBITMQ_URI: amqp://admin:admin123@rabbitmq:5672/
+      PORT: 5000
+      ELASTICSEARCH_URL: http://elasticsearch:9200
+    depends_on:
+      - mongodb
+      - rabbitmq
+    networks:
+      - efact-network
+
+  vault:
+    image: hashicorp/vault:1.16
+    container_name: vault
+    restart: always
+    ports:
+      - "8200:8200"
+    environment:
+      VAULT_DEV_ROOT_TOKEN_ID: efact-root-token-dev-only
+      VAULT_DEV_LISTEN_ADDRESS: 0.0.0.0:8200
+    cap_add:
+      - IPC_LOCK
+    volumes:
+      - vault_data:/vault/data
+      - vault_logs:/vault/logs
+      - ./vault/docker-entrypoint.sh:/vault/docker-entrypoint.sh:ro
+    entrypoint: ["/vault/docker-entrypoint.sh"]
+    networks:
+      - efact-network
+    healthcheck:
+      test: ["CMD", "sh", "-c", "VAULT_ADDR=http://localhost:8200 vault status"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+      start_period: 10s
+
+  ms2-validator:
+    build:
+      context: ./ms2-validator
+      dockerfile: Dockerfile
+    #image: yisas97/ms2-validator:2.0.0-vault
+    container_name: ms2-validator
+    restart: always
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_PROFILES_ACTIVE: prod
+      MONGO_URI: mongodb://admin:admin123@mongodb:27017/efact_db?authSource=admin
+      MONGO_DB: efact_db
+      RABBITMQ_HOST: rabbitmq
+      RABBITMQ_PORT: 5672
+      RABBITMQ_USER: admin
+      RABBITMQ_PASS: admin123
+      RABBITMQ_QUEUE: documents.created
+      # Configuraicon del vault
+      VAULT_ADDR: http://vault:8200
+      VAULT_TOKEN: ${VAULT_TOKEN:-efact-root-token-dev-only}
+      ELASTICSEARCH_URL: http://elasticsearch:9200
+    depends_on:
+      vault:
+        condition: service_healthy
+      mongodb:
+        condition: service_started
+      rabbitmq:
+        condition: service_started
+    networks:
+      - efact-network
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.12.0
+    container_name: elasticsearch
+    restart: always
+    environment:
+      - discovery.type=single-node
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - xpack.security.enabled=false
+      - xpack.security.enrollment.enabled=false
+    ports:
+      - "9200:9200"
+    volumes:
+      - elasticsearch_data:/usr/share/elasticsearch/data
+    networks:
+      - efact-network
+    healthcheck:
+      test:
+        ["CMD-SHELL", "curl -f http://localhost:9200/_cluster/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:8.12.0
+    container_name: kibana
+    restart: always
+    ports:
+      - "5601:5601"
+    environment:
+      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+    depends_on:
+      elasticsearch:
+        condition: service_healthy
+    networks:
+      - efact-network
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:5601/api/status || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+
+  kibana-setup:
+    image: curlimages/curl:8.5.0
+    container_name: kibana-setup
+    volumes:
+      - ./elk/kibana/init-kibana.sh:/init-kibana.sh:ro
+    command: sh /init-kibana.sh
+    depends_on:
+      kibana:
+        condition: service_healthy
+    networks:
+      - efact-network
+    restart: "no"
+
+volumes:
+  mongodb_data:
+    driver: local
+  rabbitmq_data:
+    driver: local
+  vault_data:
+    driver: local
+  vault_logs:
+    driver: local
+  elasticsearch_data:
+    driver: local
+
+networks:
+  efact-network:
+    driver: bridge

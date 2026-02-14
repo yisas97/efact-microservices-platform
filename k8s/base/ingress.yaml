@@ -1,0 +1,42 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: efact-ingress
+  namespace: efact
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: efact.local
+    http:
+      paths:
+      - path: /documents
+        pathType: Prefix
+        backend:
+          service:
+            name: ms1-documents-service
+            port:
+              number: 5000
+      - path: /validator
+        pathType: Prefix
+        backend:
+          service:
+            name: ms2-validator-service
+            port:
+              number: 8080
+      - path: /kibana
+        pathType: Prefix
+        backend:
+          service:
+            name: kibana-service
+            port:
+              number: 5601
+      - path: /rabbitmq
+        pathType: Prefix
+        backend:
+          service:
+            name: rabbitmq-service
+            port:
+              number: 15672

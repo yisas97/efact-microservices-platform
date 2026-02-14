@@ -1,0 +1,22 @@
+.env
+*.log
+
+ms1-documents/ms1-documents
+ms1-documents/go.sum
+
+ms2-validator/target/
+ms2-validator/.gradle/
+ms2-validator/build/
+ms2-validator/.idea/
+ms2-validator/*.iml
+
+.DS_Store
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Archivos temporales de generación de claves
+GenerateKeys*.java
+GenerateKeys*.class

@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: efact
+  labels:
+    name: efact
+    environment: production

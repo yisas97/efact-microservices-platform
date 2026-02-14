@@ -1,0 +1,90 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: ms1-documents-service
+  namespace: efact
+  labels:
+    app: ms1-documents
+spec:
+  type: ClusterIP
+  ports:
+    - port: 5000
+      targetPort: 5000
+      protocol: TCP
+      name: http
+  selector:
+    app: ms1-documents
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ms1-documents
+  namespace: efact
+  labels:
+    app: ms1-documents
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: ms1-documents
+  template:
+    metadata:
+      labels:
+        app: ms1-documents
+    spec:
+      containers:
+      - name: ms1-documents
+        image: yisas97/ms1-documents:1.0.0
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 5000
+          name: http
+        env:
+        - name: MONGO_URI
+          valueFrom:
+            secretKeyRef:
+              name: efact-secrets
+              key: MONGO_URI
+        - name: MONGO_DB
+          valueFrom:
+            configMapKeyRef:
+              name: efact-config
+              key: MONGO_INITDB_DATABASE
+        - name: RABBITMQ_URI
+          valueFrom:
+            secretKeyRef:
+              name: efact-secrets
+              key: RABBITMQ_URI
+        - name: PORT
+          valueFrom:
+            configMapKeyRef:
+              name: efact-config
+              key: MS1_PORT
+        - name: ELASTICSEARCH_URL
+          valueFrom:
+            configMapKeyRef:
+              name: efact-config
+              key: ELASTICSEARCH_URL
+        resources:
+          requests:
+            memory: "128Mi"
+            cpu: "100m"
+          limits:
+            memory: "256Mi"
+            cpu: "250m"
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 5000
+          initialDelaySeconds: 30
+          periodSeconds: 30
+          timeoutSeconds: 5
+          failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 5000
+          initialDelaySeconds: 10
+          periodSeconds: 10
+          timeoutSeconds: 3
+          failureThreshold: 3

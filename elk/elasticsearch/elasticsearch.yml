@@ -1,0 +1,9 @@
+cluster.name: "efact-cluster"
+network.host: 0.0.0.0
+
+xpack.security.enabled: false
+xpack.monitoring.collection.enabled: true
+
+discovery.type: single-node
+
+action.auto_create_index: true
