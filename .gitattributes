@@ -1,0 +1,12 @@
+# Asegurar finales de línea correctos para scripts shell
+*.sh text eol=lf
+
+# Asegurar finales de línea LF para archivos de configuración comunes
+*.json text eol=lf
+*.yml text eol=lf
+*.yaml text eol=lf
+*.md text eol=lf
+
+# Archivos Windows
+*.bat text eol=crlf
+*.ps1 text eol=crlf
