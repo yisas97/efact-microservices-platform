@@ -1,0 +1,286 @@
+basePath: /
+definitions:
+  domain.Document:
+    properties:
+      fechaEmision:
+        example: "2026-02-12T10:00:00Z"
+        type: string
+      idDocumento:
+        example: DOC-001
+        type: string
+      igvTotal:
+        example: 180
+        type: number
+      items:
+        items:
+          $ref: '#/definitions/domain.Item'
+        type: array
+      montoTotal:
+        example: 1180
+        type: number
+      montoTotalSinImpuestos:
+        example: 1000
+        type: number
+      rucEmisor:
+        example: "20123456789"
+        type: string
+      rucReceptor:
+        example: "20987654321"
+        type: string
+      uuid:
+        example: 550e8400-e29b-41d4-a716-446655440000
+        type: string
+      validacion:
+        $ref: '#/definitions/domain.Validacion'
+    type: object
+  domain.Item:
+    properties:
+      cantidad:
+        example: 5
+        type: integer
+      descripcion:
+        example: Producto A
+        type: string
+      igvTotal:
+        example: 90
+        type: number
+      precioTotal:
+        example: 500
+        type: number
+      precioUnitario:
+        example: 100
+        type: number
+    type: object
+  domain.Validacion:
+    properties:
+      estado:
+        example: VALIDO
+        type: string
+      fechaValidacion:
+        example: "2026-02-12T10:00:00Z"
+        type: string
+      firma:
+        example: abc123def456
+        type: string
+    type: object
+  errors.AppError:
+    properties:
+      error:
+        example: Bad Request
+        type: string
+      message:
+        example: Error en la solicitud
+        type: string
+      status:
+        example: 400
+        type: integer
+    type: object
+  handler.VerifyDocumentRequest:
+    properties:
+      documento:
+        $ref: '#/definitions/domain.Document'
+      firma:
+        type: string
+    required:
+    - documento
+    - firma
+    type: object
+  handler.VerifyDocumentResponse:
+    properties:
+      message:
+        type: string
+      valid:
+        type: boolean
+    type: object
+host: localhost:5001
+info:
+  contact:
+    email: support@example.com
+    name: API Support
+  description: |-
+    API para gestión de documentos fiscales con validación y firma digital
+    Este microservicio permite crear, consultar, actualizar y eliminar documentos.
+  title: MS1 Documents API
+  version: "1.0"
+paths:
+  /documents:
+    get:
+      consumes:
+      - application/json
+      description: Obtiene la lista completa de documentos fiscales
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/domain.Document'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errors.AppError'
+      summary: Listar todos los documentos
+      tags:
+      - documents
+    post:
+      consumes:
+      - application/json
+      description: Crea un nuevo documento fiscal con sus items y validación
+      parameters:
+      - description: Datos del documento
+        in: body
+        name: document
+        required: true
+        schema:
+          $ref: '#/definitions/domain.Document'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/domain.Document'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/errors.AppError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errors.AppError'
+      summary: Crear nuevo documento
+      tags:
+      - documents
+  /documents/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Elimina permanentemente un documento del sistema
+      parameters:
+      - description: ID del documento
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/errors.AppError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errors.AppError'
+      summary: Eliminar documento
+      tags:
+      - documents
+    get:
+      consumes:
+      - application/json
+      description: Obtiene un documento específico mediante su ID
+      parameters:
+      - description: ID del documento
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.Document'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/errors.AppError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errors.AppError'
+      summary: Obtener documento por ID
+      tags:
+      - documents
+    put:
+      consumes:
+      - application/json
+      description: Actualiza los datos de un documento existente
+      parameters:
+      - description: ID del documento
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Datos actualizados
+        in: body
+        name: document
+        required: true
+        schema:
+          $ref: '#/definitions/domain.Document'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.Document'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/errors.AppError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/errors.AppError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errors.AppError'
+      summary: Actualizar documento
+      tags:
+      - documents
+  /documents/verify:
+    post:
+      consumes:
+      - application/json
+      description: Verifica la validez de la firma digital de un documento
+      parameters:
+      - description: Documento y firma
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/handler.VerifyDocumentRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handler.VerifyDocumentResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/errors.AppError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errors.AppError'
+      summary: Verificar firma de documento
+      tags:
+      - documents
+swagger: "2.0"
+tags:
+- description: Operaciones relacionadas con documentos fiscales
+  name: documents

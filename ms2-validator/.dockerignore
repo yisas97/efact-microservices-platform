@@ -1,0 +1,49 @@
+# Git
+.git/
+.gitignore
+.gitattributes
+
+# Build artifacts (se copiarán selectivamente)
+target/
+!target/*.jar
+
+# IDE
+.vscode/
+.idea/
+.zed/
+*.swp
+*.swo
+*~
+.DS_Store
+.settings/
+.project
+.classpath
+
+# Maven
+.mvn/
+mvnw
+mvnw.cmd
+
+# Testing
+*.log
+*.log.*
+
+# CI/CD
+.github/
+.gitlab-ci.yml
+.circleci/
+
+# Documentation
+README.md
+docs/
+*.md
+
+# Scripts y configuración local
+*.bat
+docker-compose.yml
+.dockerignore
+Dockerfile
+
+# Environment files
+.env
+.env.*
